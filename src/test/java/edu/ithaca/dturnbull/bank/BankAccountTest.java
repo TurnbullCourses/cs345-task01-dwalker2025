@@ -24,8 +24,20 @@ class BankAccountTest {
 
     @Test
     void isEmailValidTest(){
+        //prefix tests
         assertTrue(BankAccount.isEmailValid( "a@b.com"));   // valid email address
         assertFalse( BankAccount.isEmailValid(""));         // empty string
+        assertFalse(BankAccount.isEmailValid("abc..def@mail.com")); // consecutive special characters
+        assertFalse(BankAccount.isEmailValid(".abc@mail.com"));  // starting email with punctuation
+        assertFalse(BankAccount.isEmailValid("abc#def@mail.com")); // no hashtags
+
+        //domain tests
+        assertTrue(BankAccount.isEmailValid( "abc.def@mail.cc")); // valid email
+        assertFalse(BankAccount.isEmailValid("abc.def@mail.c")); // last portion of domain must be atleast 2 characters
+        assertFalse(BankAccount.isEmailValid("abc.def@mail#archive.com")); // no hashtags
+        assertFalse(BankAccount.isEmailValid("abc.def@mail")); // no . + atleast 2 characters at end
+        assertFalse(BankAccount.isEmailValid("abc.def@mail..com")); //  consecutive special characters
+
 
         
     }
