@@ -6,21 +6,44 @@ import static org.junit.jupiter.api.Assertions.*;
 class BankAccountTest {
 
     @Test
-    void getBalanceTest() {
-        BankAccount bankAccount = new BankAccount("a@b.com", 200);
-
-        assertEquals(200, bankAccount.getBalance(), 0.001);
+    void constructorTest_validEmail() {
+        BankAccount account = new BankAccount("test@example.com", 100.0);
+        assertEquals("test@example.com", account.getEmail());
+        assertEquals(100.0, account.getBalance(), 0.001);
     }
 
     @Test
-    void withdrawTest() throws InsufficientFundsException {
-        BankAccount bankAccount = new BankAccount("a@b.com", 200);
-        bankAccount.withdraw(100);
-
-        assertEquals(100, bankAccount.getBalance(), 0.001);
-        assertThrows(InsufficientFundsException.class, () -> bankAccount.withdraw(300));
+    void constructorTest_invalidEmail() {
+        assertThrows(IllegalArgumentException.class, () -> new BankAccount("invalid-email", 100.0));
     }
 
+    @Test
+    void getBalanceTest() {
+        BankAccount bankAccount = new BankAccount("a@b.com", 200.0);
+        assertEquals(200.0, bankAccount.getBalance(), 0.001);
+    }
+
+    @Test
+    void withdrawTest_validAmount() throws InsufficientFundsException {
+        BankAccount bankAccount = new BankAccount("a@b.com", 200.0);
+        bankAccount.withdraw(100.0);
+        assertEquals(100.0, bankAccount.getBalance(), 0.001);
+    }
+
+    @Test
+    void withdrawTest_insufficientFunds() {
+        BankAccount bankAccount = new BankAccount("a@b.com", 200.0);
+        assertThrows(InsufficientFundsException.class, () -> bankAccount.withdraw(300.0));
+        assertEquals(200.0, bankAccount.getBalance(), 0.001); // Ensure balance is unchanged
+    }
+
+    @Test
+    void withdrawTest_negativeAmount() {
+        BankAccount bankAccount = new BankAccount("a@b.com", 200.0);
+        assertThrows(IllegalArgumentException.class, () -> bankAccount.withdraw(-50.0));
+        assertEquals(200.0, bankAccount.getBalance(), 0.001); // Ensure balance is unchanged
+    }
+    
     @Test
     void isEmailValidTest() {
         // prefix tests

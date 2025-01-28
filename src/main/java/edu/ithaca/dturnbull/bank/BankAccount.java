@@ -32,11 +32,13 @@ public class BankAccount {
      *       than balance
      */
     public void withdraw(double amount) throws InsufficientFundsException {
-        if (amount <= balance) {
-            balance -= amount;
-        } else {
+        if (amount < 0) {
+            throw new IllegalArgumentException("Withdrawal amount cannot be negative");
+        }
+        if (amount > balance) {
             throw new InsufficientFundsException("Not enough money");
         }
+        balance -= amount;
     }
 
     public static boolean isEmailValid(String email) {
