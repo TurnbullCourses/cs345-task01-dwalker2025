@@ -40,15 +40,15 @@ class BankAccountTest {
     @Test
     void withdrawTest_negativeAmount() {
         BankAccount bankAccount = new BankAccount("a@b.com", 200.0);
-        assertThrows(IllegalArgumentException.class, () -> bankAccount.withdraw(-50.0));
+        assertThrows(InsufficientFundsException.class, () -> bankAccount.withdraw(-50.0));
         assertEquals(200.0, bankAccount.getBalance(), 0.001); // Ensure balance is unchanged
     }
 
     @Test
     void depositTest(){
         BankAccount bankAccount = new BankAccount("abc@b.com", 200.0);
-        assertThrows(IllegalArgumentException.class, () -> bankAccount.deposit(-50.0));
-        assertThrows(IllegalArgumentException.class, () -> bankAccount.deposit(0));
+        assertThrows(InsufficientFundsException.class, () -> bankAccount.deposit(-50.0));
+        assertThrows(InsufficientFundsException.class, () -> bankAccount.deposit(0));
         assertThrows(InsufficientFundsException.class, () -> bankAccount.deposit(20.023));
     }
 
@@ -56,9 +56,9 @@ class BankAccountTest {
     void transferTest() {
         BankAccount bankAccount1 = new BankAccount("abc@b.com", 200.0);
         BankAccount bankAccount2 = new BankAccount("abc@b.com", 150.0);
-        assertThrows(IllegalArgumentException.class, () -> bankAccount1.transfer(bankAccount1, bankAccount2, -50.0));
-        assertThrows(IllegalArgumentException.class, () -> bankAccount1.transfer(bankAccount1, bankAccount2, 0));
-        assertThrows(IllegalArgumentException.class, () -> bankAccount1.transfer(bankAccount1, bankAccount2, 10.023));
+        assertThrows(InsufficientFundsException.class, () -> bankAccount1.transfer(bankAccount1, bankAccount2, -50.0));
+        assertThrows(InsufficientFundsException.class, () -> bankAccount1.transfer(bankAccount1, bankAccount2, 0));
+        assertThrows(InsufficientFundsException.class, () -> bankAccount1.transfer(bankAccount1, bankAccount2, 10.023));
         assertThrows(InsufficientFundsException.class, () -> bankAccount1.transfer(bankAccount1, bankAccount2, 250));
     }
 

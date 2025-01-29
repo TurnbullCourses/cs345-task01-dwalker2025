@@ -4,7 +4,7 @@ import java.util.Arrays;
 
 public class BankAccount {
 
-    private String email;
+    private final String email;
     private double balance;
 
     /**
@@ -27,19 +27,24 @@ public class BankAccount {
         return email;
     }
 
+
+    public static boolean isAmountValid(double amount) throws InsufficientFundsException {
+        if (amount <= 0) {
+            throw new InsufficientFundsException("Can't be a negative or a zero.");
+        }
+
+        String numStr = String.valueOf(amount);
+        int decimalIndex = numStr.indexOf('.');
+
+        return numStr.length() - decimalIndex - 1 <= 2;
+    }
     /**
      * @post reduces the balance by amount if amount is non-negative and smaller
      *       than balance
      */
     public void withdraw(double amount) throws InsufficientFundsException {
-        if (amount < 0) {
-            throw new IllegalArgumentException("Withdrawal amount cannot be negative");
-        }
-        String numStr = String.valueOf(amount);
-        int decimalIndex = numStr.indexOf('.');
-
-        if (numStr.length() - decimalIndex - 1 > 2) {
-            throw new InsufficientFundsException("Has to be a valid dollar amount!");
+        if (!isAmountValid(amount)){
+            throw new InsufficientFundsException("Invalid amount. Make sure amount is valid dollar amount.");
         }
         if (amount > balance) {
             throw new InsufficientFundsException("Not enough money");
@@ -49,31 +54,20 @@ public class BankAccount {
     }
 
     public void deposit(double amount) throws InsufficientFundsException {
-        if (amount <= 0) {
-            throw new IllegalArgumentException("Deposit amount cannot be negative or zero.");
-        }
-        String numStr = String.valueOf(amount);
-        int decimalIndex = numStr.indexOf('.');
-
-        if (numStr.length() - decimalIndex - 1 > 2) {
-            throw new InsufficientFundsException("Has to be a valid dollar amount!");
+        if (!isAmountValid(amount)){
+            throw new InsufficientFundsException("Invalid amount. Make sure amount is valid dollar amount.");
         }
         balance += amount;
         System.out.println("You deposited $" + amount + ". Your balance is " + balance + ".");
     }
 
     public void transfer(BankAccount sender_account, BankAccount recipient_account, double amount) throws InsufficientFundsException {
-        if (amount <= 0) {
-            throw new IllegalArgumentException("Deposit amount cannot be negative or zero");
+        if (!isAmountValid(amount)){
+            throw new InsufficientFundsException("Invalid amount. Make sure amount is valid dollar amount.");
         }
+
         if (sender_account.equals(recipient_account)) {
             throw new IllegalArgumentException("Can't deposit into same account.");
-        }
-        String numStr = String.valueOf(amount);
-        int decimalIndex = numStr.indexOf('.');
-
-        if (numStr.length() - decimalIndex - 1 > 2) {
-            throw new IllegalArgumentException("Has to be a valid dollar amount!");
         }
 
         if (sender_account.balance < amount) {
