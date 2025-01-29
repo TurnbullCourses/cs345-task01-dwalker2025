@@ -35,18 +35,25 @@ public class BankAccount {
         if (amount < 0) {
             throw new IllegalArgumentException("Withdrawal amount cannot be negative");
         }
+        String numStr = String.valueOf(amount);
+        int decimalIndex = numStr.indexOf('.');
+
+        if (numStr.length() - decimalIndex - 1 > 2) {
+            throw new InsufficientFundsException("Has to be a valid dollar amount!");
+        }
         if (amount > balance) {
             throw new InsufficientFundsException("Not enough money");
         }
         balance -= amount;
+        System.out.println("You withdrew $" + amount + ". Your balance is " + balance + ".");
     }
 
     public static boolean isEmailValid(String email) {
-        if (email.indexOf('@') == -1) { // no @ symbol or empty string
-            return false;
-        }
 
         String[] emailParts = email.split("@"); // split at @ symbol to get seperate prefix and domain
+        if (email.indexOf('@') == -1 || emailParts.length != 2){
+            return false;
+        }
         emailParts = Arrays.stream(emailParts)
                 .filter(part -> !part.isEmpty())
                 .toArray(String[]::new);
@@ -71,10 +78,19 @@ public class BankAccount {
 
     private static boolean isPrefixValid(String prefix) {
         // if prefix is empty
-        if (prefix.length() == 0) {
+        if (prefix.isEmpty()) {
             return false;
         }
-
+        String invalidPrefixChrs = "(),:;<>@[\\]";
+        for (int i = 0; i < prefix.length() - 1; i++){
+            char current_pre = prefix.charAt(i);  // current chr in prefix
+            for (int j = 0; i < invalidPrefixChrs.length() - 1; i++){
+                char current_inv = prefix.charAt(j); // current chr in invalid chr string
+                if (current_pre == current_inv ){
+                    return false;
+                }
+            }
+        }
         // if prefix starts or ends with a special character
         if (prefix.startsWith(".") || prefix.startsWith("-") || prefix.startsWith("_") ||
                 prefix.endsWith(".") || prefix.endsWith("-") || prefix.endsWith("_")) {
@@ -111,6 +127,16 @@ public class BankAccount {
         int lastPeriodIndex = domain.lastIndexOf('.');
         if (lastPeriodIndex == -1 || lastPeriodIndex == domain.length() - 1 || lastPeriodIndex == 0) {
             return false;
+        }
+        String invalidDomainChars = "(),:;<>@[]\\\" ";
+        for (int i = 0; i < domain.length() - 1; i++){
+            char current_dom = domain.charAt(i);  // current chr in domain
+            for (int j = 0; i < invalidDomainChars.length() - 1; i++){
+                char domain_inv = domain.charAt(j); // current chr in invalid chr string
+                if (current_dom == domain_inv ){
+                    return false;
+                }
+            }
         }
 
         // creates separate domain parts
