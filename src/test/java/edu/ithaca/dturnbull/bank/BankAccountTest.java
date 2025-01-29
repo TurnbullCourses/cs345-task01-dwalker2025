@@ -24,24 +24,20 @@ class BankAccountTest {
     }
 
     @Test
-    void withdrawTest_validAmount() throws InsufficientFundsException {
+    void withdrawTest() throws InsufficientFundsException {
         BankAccount bankAccount = new BankAccount("a@b.com", 200.0);
         bankAccount.withdraw(100.0);
         assertEquals(100.0, bankAccount.getBalance(), 0.001);
-    }
 
-    @Test
-    void withdrawTest_insufficientFunds() {
-        BankAccount bankAccount = new BankAccount("a@b.com", 200.0);
-        assertThrows(InsufficientFundsException.class, () -> bankAccount.withdraw(300.0));
-        assertEquals(200.0, bankAccount.getBalance(), 0.001); // Ensure balance is unchanged
-    }
+        BankAccount bankAccount2 = new BankAccount("a@b.com", 200.0);
+        assertThrows(InsufficientFundsException.class, () -> bankAccount2.withdraw(300.0));
+        assertEquals(200.0, bankAccount2.getBalance(), 0.001); // Ensure balance is unchanged
 
-    @Test
-    void withdrawTest_negativeAmount() {
-        BankAccount bankAccount = new BankAccount("a@b.com", 200.0);
-        assertThrows(InsufficientFundsException.class, () -> bankAccount.withdraw(-50.0));
-        assertEquals(200.0, bankAccount.getBalance(), 0.001); // Ensure balance is unchanged
+        BankAccount bankAccount3 = new BankAccount("a@b.com", 200.0);
+        assertThrows(InsufficientFundsException.class, () -> bankAccount3.withdraw(-50.0));
+        assertEquals(200.0, bankAccount3.getBalance(), 0.001); // Ensure balance is unchanged
+
+
     }
 
     @Test
